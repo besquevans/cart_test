@@ -4,6 +4,7 @@ class User < ApplicationRecord
 
   has_many :orders
   has_many :fav_products
+  has_many :my_fav_products, through: :fav_products, source: :product
   has_one :cart
   has_secure_password
 
