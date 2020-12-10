@@ -1,0 +1,15 @@
+nav.navbar.navbar-expand-lg.navbar-light.bg-light
+  div.collapse.navbar-collapse id="navbarTogglerDemo03"
+    h2 Cart Test
+    ul.navbar-nav.ml-auto.mt-2.mt-lg-0
+      - if logged_in?
+        li.nav-item
+          | Email: #{current_user.email}
+        li.nav-item
+          = link_to "Sign Out", sign_out_users_path, class: "nav-link", method: :delete, data: {confirm: "Confirm?"}
+      - else
+        li.nav-item
+          = link_to "Login", sign_in_users_path, class: "nav-link"
+
+        li.nav-item
+          = link_to "Sign Up", sign_up_users_path, class: "nav-link"
