@@ -1,0 +1,25 @@
+h3 Products Index
+
+= link_to "My Cart", my_cart_products_path, class: "btn btn-outline-primary ml-2 mr-2"
+= link_to "My Fav", my_fav_products_products_path, class: "btn btn-outline-primary ml-2 mr-2"
+
+table.table.mt-3
+  thead
+    th ID
+    th Name
+    th Value
+    th Note
+    th Action
+  tbody
+    = @products.find_each do |product|
+      tr
+        td = product.id
+        td = product.name
+        td = product.value
+        td Note
+        td
+          = link_to "Add To Cart", add_to_cart_product_path(product.id), method: :post, class: "mr-3 btn btn-outline-primary"
+          = form_with(url: add_fav_products_product_path(product.id), class: "d-inline-block") do |f|
+            = f.submit "Add To Fav", class: "btn btn-outline-primary"
+            = f.label :note, "Note", class: "ml-1 mr-1"
+            = f.text_field :note
