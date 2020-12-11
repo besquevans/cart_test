@@ -4,14 +4,16 @@ Rails.application.routes.draw do
   resources :products, only: [:index] do
     collection do
       get :my_cart
-      get :my_fav_products
+      get :my_fav
       get :my_orders
       get :my_order_detail
     end
 
     member do
       post :add_to_cart
-      post :add_fav_products
+      delete :remove_from_cart
+      post :add_to_fav
+      delete :remove_from_fav
     end
   end
 

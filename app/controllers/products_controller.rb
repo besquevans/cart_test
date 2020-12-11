@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
   def index
     @products = Product.all
+    @fav_products_ids = current_user.fav_products.pluck(:product_id)
   end
 
   def my_cart
@@ -19,12 +20,17 @@ class ProductsController < ApplicationController
     end
   end
 
-  def add_fav_products
+  def add_to_fav
     current_user.fav_products.create(product_id: params[:id], note: params[:note])
-    redirect_to products_path, notice: "<b>Success!</b> note: #{params[:note]}"
+    redirect_to products_path, notice: "<b>Success!</b> note: #{params[:note]}"   #html_safe 問題
   end
 
-  def my_fav_products
+  def remove_from_fav
+    FavProduct.find_by(product_id: params[:id]).destroy
+    redirect_back(fallback_location:"/")
+  end
+
+  def my_fav
     @fav_products = current_user.fav_products
   end
 
