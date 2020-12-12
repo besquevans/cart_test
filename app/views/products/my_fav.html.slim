@@ -4,14 +4,12 @@ table.table
   thead
     th Name
     th Note
-    th Amount
     th Action
   tbody
     = @fav_products.find_each do |fav_product|
       tr
         td = fav_product.product.name
         td = fav_product.note
-        td = "- amount +"
         td
           = link_to "Remove From Fav",
           remove_from_fav_product_path(fav_product.product.id),

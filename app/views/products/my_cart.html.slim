@@ -1,0 +1,20 @@
+h3 My Cart
+
+table.table
+  thead
+    th Name
+    th value
+    th Amount
+    th Action
+  tbody
+    = @cart_items.find_each do |item|
+      tr
+        td = item.product.name
+        td = item.product.value
+        td = item.amount
+        td
+          = link_to "Remove From Cart",
+          remove_from_cart_product_path(item.product.id),
+          method: :delete,
+          data: { confirm: "Are you sure?"},
+          class: "btn btn-outline-danger"

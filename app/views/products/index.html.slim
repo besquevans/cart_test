@@ -8,15 +8,31 @@ table.table.mt-3
     th ID
     th Name
     th Value
-    th Action
+    th Stock
+    th Cart
+    th Favorite
   tbody
     = @products.find_each do |product|
       tr
         td = product.id
         td = product.name
         td = product.value
+        td = product.stock.amount
         td
-          = link_to "Add To Cart", add_to_cart_product_path(product.id), method: :post, class: "mr-3 btn btn-outline-primary"
+          //// 加入/移除商品 到 購物車
+          - if @cart_items_ids.include?(product.id)
+            = link_to "Remove From Cart",
+            remove_from_cart_product_path(product.id),
+            method: :delete,
+            data: { confirm: "Are you sure?"},
+            class: "btn btn-outline-danger"
+          - else
+            = form_with(url: add_to_cart_product_path(product.id), class: "d-inline-block") do |f|
+              = f.submit "Add To Cart", class: "btn btn-outline-primary ml-1"
+              = f.label :amount, "Amount", class: "ml-1 mr-1"
+              = f.number_field :amount, value: 1
+        td
+          //// 加入/移除商品 到 我的最愛
           - if @fav_products_ids.include?(product.id)
             = link_to "Remove From Fav",
             remove_from_fav_product_path(product.id),
@@ -24,7 +40,7 @@ table.table.mt-3
             data: { confirm: "Are you sure?"},
             class: "btn btn-outline-danger"
           - else
-            = form_with(url: add_to_fav_product_path(product.id), class: "d-inline-block") do |f|
-              = f.submit "Add To Fav", class: "btn btn-outline-primary"
+            = form_with(url: add_to_fav_product_path(product.id), class: "d-inline-block ml-2") do |f|
+              = f.submit "Add To Fav", class: "btn btn-outline-primary ml-1"
               = f.label :note, "Note", class: "ml-1 mr-1"
               = f.text_field :note

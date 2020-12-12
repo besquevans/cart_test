@@ -2,13 +2,11 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: /\A[^@]+@[^@]+\z/}
   validates :password, presence: true
 
-  has_many :orders
-  has_many :fav_products
+  has_many :orders, dependent: :destroy
+  has_many :fav_products, dependent: :destroy
   has_many :my_fav_products, through: :fav_products, source: :product
   has_one :cart
   has_secure_password
-
-  has_many :tasks, dependent: :destroy
 
   def current_user
     User.find(session[:user_id])
