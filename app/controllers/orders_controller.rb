@@ -28,6 +28,6 @@ class OrdersController < ApplicationController
       cart.cart_items = []
     end
 
-    redirect_to(orders_path)
+    redirect_to(orders_path, notice: "Order create success!")
   end
 end

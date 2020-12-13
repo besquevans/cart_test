@@ -25,7 +25,7 @@ class ProductsController < ApplicationController
     else
       product.stock.update(amount: (product.stock.amount - amount ))
       @cart.cart_items.create(product_id: product.id, amount: amount)
-      redirect_to(products_path, notice: "Success!")
+      redirect_to(products_path, notice: "Add #{product.name} to Cart!")
     end
   end
 
@@ -33,7 +33,7 @@ class ProductsController < ApplicationController
     cart_item = @cart.cart_items.find_by(product_id: params[:id]).destroy
     product = Product.find_by(id: params[:id])
     product.stock.update(amount: (product.stock.amount + cart_item.amount ))
-    redirect_back(fallback_location:"/")
+    redirect_back(fallback_location:"/", notice: "Remove #{product.name} from Cart!")
   end
 
 
@@ -44,12 +44,12 @@ class ProductsController < ApplicationController
 
   def add_to_fav
     @fav_products.create(product_id: params[:id], note: params[:note])
-    redirect_to(products_path, notice: "<b>Success!</b> note: #{params[:note]}")   #html_safe 問題
+    redirect_to(products_path, notice: "note: #{params[:note]}" )
   end
 
   def remove_from_fav
     @fav_products.find_by(product_id: params[:id]).destroy
-    redirect_back(fallback_location:"/")
+    redirect_back(fallback_location:"/", notice: "Remove #{Product.find_by(id: params[:id]).name} from Favorites")
   end
 
   private
