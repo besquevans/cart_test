@@ -1,0 +1,15 @@
+h3 My Orders
+
+table.table
+  thead
+    th ID
+    th Created At
+    th Email
+    th Detail
+  tbody
+    - @orders.each do |order|
+      tr
+        td = order.id
+        td = order.created_at.strftime('%Y/%m/%d %T')
+        td = order.email
+        td = link_to "Detail", order_path(order.id)

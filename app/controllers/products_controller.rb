@@ -52,29 +52,6 @@ class ProductsController < ApplicationController
     redirect_back(fallback_location:"/")
   end
 
-
-  # order
-
-  def create_order
-    cart = Cart.find_by(id: params[:id])
-
-    @order = Order.create(
-      user_id: current_user.id,
-      cart_id: cart.id,
-      email: current_user.email
-    )
-
-    cart.destroy
-  end
-
-  def my_orders
-    @orders = current_user.orders
-  end
-
-  def my_order_detail
-    @order = Order.find_by(id: params[:id])
-  end
-
   private
 
   def find_cart

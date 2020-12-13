@@ -18,3 +18,8 @@ table.table
           method: :delete,
           data: { confirm: "Are you sure?"},
           class: "btn btn-outline-danger"
+
+= form_with(url: orders_path, class: "form-inline") do |f|
+  = f.label :email, "Email"
+  = f.text_field :email, class: "form-control mx-2"
+  = f.submit "Create Order", class: "btn btn-outline-primary"

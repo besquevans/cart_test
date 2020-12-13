@@ -5,8 +5,6 @@ Rails.application.routes.draw do
     collection do
       get :my_cart
       get :my_fav
-      get :my_orders
-      get :my_order_detail
     end
 
     member do
@@ -16,6 +14,8 @@ Rails.application.routes.draw do
       delete :remove_from_fav
     end
   end
+
+  resources :orders, only: [:index, :show, :create]
 
   resources :users, only: [:create] do
     collection do
