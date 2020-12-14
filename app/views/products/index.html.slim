@@ -45,3 +45,5 @@ table.table.mt-3
               = f.submit "Add To Fav", class: "btn btn-outline-primary ml-1"
               = f.label :note, "Note", class: "ml-1 mr-1"
               = f.text_field :note
+
+= paginate @products
