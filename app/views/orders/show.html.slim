@@ -1,0 +1,24 @@
+h3 Order Detail
+
+ul
+  li = "ID: #{@order.id}"
+  li = "Email: #{@order.email}"
+
+table.table
+  thead
+    th #
+    th Name
+    th Value
+    th Amount
+  tbody
+    - @order_items.each.with_index do |item, index|
+      tr
+        td = index + 1
+        td = item.name
+        td = item.value
+        td = item.amount
+
+hr
+p
+  = "Total : "
+  strong = @order.total

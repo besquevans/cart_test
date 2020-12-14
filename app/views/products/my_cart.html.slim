@@ -4,8 +4,8 @@ h3 My Cart
     - @order.errors.full_messages.each do |msg|
       li = msg
 
-= form_with(model: @order, url: orders_path, class: "form-inline", local: true) do |f|
-  table.table
+= form_with(model: @order, url: orders_path, class: "form", local: true) do |f|
+  table.table.cart_table
     thead
       th Name
       th value
@@ -18,10 +18,10 @@ h3 My Cart
           td
             = item.product.name
             = item_f.hidden_field :name, value: item.product.name
-          td
+          td.item_value
             = item.product.value
             = item_f.hidden_field :value, value: item.product.value
-          td
+          td.item_amount
             = item_f.number_field :amount, value: 1, max: item.product.stock.amount, min: 1
           td
             = link_to "Remove From Cart",
@@ -29,7 +29,12 @@ h3 My Cart
             method: :delete,
             data: { confirm: "Are you sure?"},
             class: "btn btn-outline-danger"
-
-  = f.label :email, "Email"
-  = f.text_field :email, class: "form-control mx-2"
-  = f.submit "Create Order", class: "btn btn-outline-primary"
+  hr
+  p
+    = "Total : "
+    strong.total
+      = @total
+  div.row
+    = f.label :email, "Email :", class: "col-2"
+    = f.text_field :email, class: "form-control col-10"
+  div = f.submit "Create Order", class: "btn btn-outline-primary mt-3"

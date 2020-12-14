@@ -13,6 +13,7 @@ class ProductsController < ApplicationController
 
   def my_cart
     @cart_items = current_cart.cart_items.includes(:product)
+    @total = @cart_items.pluck(:value).sum
     @order = Order.new
   end
 

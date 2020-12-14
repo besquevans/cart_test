@@ -5,17 +5,21 @@ class OrdersController < ApplicationController
 
   def show
     @order = Order.find_by(id: params[:id])
+    @order_items = @order.order_items
   end
 
   def create
     ActiveRecord::Base.transaction do
       @order = current_user.orders.build(email: order_params[:email])
+      order_total = 0
 
       order_params[:order_items].to_h.each do |item|
         product = Product.find(item.last[:product_id])
         product.stock.update!(amount: product.stock.amount - item.last[:amount].to_i)
         @order.order_items.build(item.last)
+        order_total += item.last[:value].to_i * item.last[:amount].to_i
       end
+      @order.total = order_total
 
       if @order.save
         current_user.cart.cart_items = []
