@@ -1,25 +1,35 @@
 h3 My Cart
+- if @order.errors.any?
+  ul
+    - @order.errors.full_messages.each do |msg|
+      li = msg
 
-table.table
-  thead
-    th Name
-    th value
-    th Amount
-    th Action
-  tbody
-    = @cart_items.find_each do |item|
-      tr
-        td = item.product.name
-        td = item.product.value
-        td = item.amount
-        td
-          = link_to "Remove From Cart",
-          remove_from_cart_product_path(item.product.id),
-          method: :delete,
-          data: { confirm: "Are you sure?"},
-          class: "btn btn-outline-danger"
+= form_with(model: @order, url: orders_path, class: "form-inline", local: true) do |f|
+  table.table
+    thead
+      th Name
+      th value
+      th Amount
+      th Action
+    tbody
+      - @cart_items.each do |item|
+        tr = f.fields_for :order_items, index: item.id do |item_f|
+          = item_f.hidden_field :product_id, value: item.product.id
+          td
+            = item.product.name
+            = item_f.hidden_field :name, value: item.product.name
+          td
+            = item.product.value
+            = item_f.hidden_field :value, value: item.product.value
+          td
+            = item_f.number_field :amount, value: 1, max: item.product.stock.amount, min: 1
+          td
+            = link_to "Remove From Cart",
+            remove_from_cart_product_path(item.product.id),
+            method: :delete,
+            data: { confirm: "Are you sure?"},
+            class: "btn btn-outline-danger"
 
-= form_with(url: orders_path, class: "form-inline") do |f|
   = f.label :email, "Email"
   = f.text_field :email, class: "form-control mx-2"
   = f.submit "Create Order", class: "btn btn-outline-primary"

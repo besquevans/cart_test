@@ -8,26 +8,34 @@ class OrdersController < ApplicationController
   end
 
   def create
-    cart = current_user.cart
-
     ActiveRecord::Base.transaction do
-      order = current_user.orders.create!(
-        email: params[:email]
-      )
+      @order = current_user.orders.build(email: order_params[:email])
 
-      Order.last.order_items.create!(
-        cart.cart_items.map do |item|
-          {
-            name: item.product.name,
-            value: item.product.value,
-            amount: item.amount
-          }
-        end
-      )
+      order_params[:order_items].to_h.each do |item|
+        product = Product.find(item.last[:product_id])
+        product.stock.update!(amount: product.stock.amount - item.last[:amount].to_i)
+        @order.order_items.build(item.last)
+      end
 
-      cart.cart_items = []
+      if @order.save
+        current_user.cart.cart_items = []
+        redirect_to(orders_path, notice: "Order create success!")
+      else
+        @cart_items = current_cart.cart_items
+        flash.now[:alert] = "Order create false!"
+        render template: "products/my_cart"
+      end
     end
+  end
 
-    redirect_to(orders_path, notice: "Order create success!")
+  def update_stock(option)
+    products = Product.where(id: option[:product_ids])
+
+  end
+
+  private
+
+  def order_params
+    params.require(:order).permit(:email, order_items: [:name, :value, :amount, :product_id])
   end
 end

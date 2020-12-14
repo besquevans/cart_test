@@ -15,4 +15,8 @@ class ApplicationController < ActionController::Base
   def authorized
     redirect_to sign_in_users_path unless logged_in?
   end
+
+  def current_cart
+    @cart ||= Cart.where(user_id: current_user.id).first_or_create
+  end
 end

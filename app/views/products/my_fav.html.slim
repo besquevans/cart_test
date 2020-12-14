@@ -6,7 +6,7 @@ table.table
     th Note
     th Action
   tbody
-    = @fav_products.find_each do |fav_product|
+    - @fav_products.each do |fav_product|
       tr
         td = fav_product.product.name
         td = fav_product.note
