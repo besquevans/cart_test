@@ -1,8 +1,6 @@
 h3 My Cart
-- if @order.errors.any?
-  ul
-    - @order.errors.full_messages.each do |msg|
-      li = msg
+- if @exception
+  = @exception.message
 
 = form_with(model: @order, url: orders_path, class: "form", local: true) do |f|
   table.table.cart_table

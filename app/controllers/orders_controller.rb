@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   end
 
   def show
-    @order = Order.find_by(id: params[:id])
+    @order = current_user.orders.find_by(id: params[:id])
     @order_items = @order.order_items
   end
 
@@ -19,17 +19,15 @@ class OrdersController < ApplicationController
         @order.order_items.build(item.last)
         order_total += item.last[:value].to_i * item.last[:amount].to_i
       end
-      @order.total = order_total
+      @order.update!(total: order_total)
 
-      if @order.save
-        current_user.cart.cart_items = []
-        redirect_to(orders_path, notice: "Order create success!")
-      else
-        @cart_items = current_cart.cart_items
-        flash.now[:alert] = "Order create false!"
-        render template: "products/my_cart"
-      end
+      current_user.cart.cart_items = []
+      redirect_to(orders_path, notice: "Order create success!")
     end
+  rescue ActiveRecord::RecordInvalid => @exception
+    @cart_items = current_cart.cart_items
+    flash.now[:alert] = "Order create false!"
+    render template: "products/my_cart"
   end
 
   def update_stock(option)
