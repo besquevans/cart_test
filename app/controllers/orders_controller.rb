@@ -1,4 +1,6 @@
 class OrdersController < ApplicationController
+  before_action :current_cart, only: [:create]
+
   def index
     @orders = current_user.orders.order(created_at: :desc).page(params[:page]).per(10)
   end
@@ -9,10 +11,10 @@ class OrdersController < ApplicationController
   end
 
   def create
-    ActiveRecord::Base.transaction do
-      @order = current_user.orders.build(email: order_params[:email])
-      order_total = 0
+    @order = current_user.orders.build(email: order_params[:email])
+    order_total = 0
 
+    ActiveRecord::Base.transaction do
       order_params[:order_items].to_h.each do |item|
         product = Product.find(item.last[:product_id])
         product.stock.update!(amount: product.stock.amount - item.last[:amount].to_i)
@@ -21,18 +23,12 @@ class OrdersController < ApplicationController
       end
       @order.update!(total: order_total)
 
-      current_user.cart.cart_items = []
+      current_cart.cart_items = []
       redirect_to(orders_path, notice: "Order create success!")
     end
-  rescue ActiveRecord::RecordInvalid => @exception
-    @cart_items = current_cart.cart_items
+  rescue ActiveRecord::RecordInvalid
     flash.now[:alert] = "Order create false!"
     render template: "products/my_cart"
-  end
-
-  def update_stock(option)
-    products = Product.where(id: option[:product_ids])
-
   end
 
   private
